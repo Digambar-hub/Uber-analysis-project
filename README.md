@@ -1,5 +1,7 @@
 # Uber-analysis-project
-UBER TRIP ANALYSIS
+
+                                              UBER TRIP ANALYSIS
+
 DAHBOARD 1: OVERVIEW ANALYSIS
 In this Project we have analysed the Using Power BI Insights that is showing the trends, revenue, trip, efficiency
 Helping stake holder make data-driven decision
@@ -50,6 +52,8 @@ Additional Enhancements:
 
 ![Screenshot 2025-04-25 010807](https://github.com/user-attachments/assets/7798a22e-daca-4ae4-9fc5-6c3fbaf3c17d)
 
+                                                 Location Analysis
+
 IN this analysis we are gonna understand trip location locations is crucial for optimizing ride distribution, demand forecasting, and operational efficiency. This analysis focuses on:
 	Most Frequent Pickup Point
 •	Identify the most common starting locations for trips.
@@ -57,10 +61,95 @@ IN this analysis we are gonna understand trip location locations is crucial for 
 
 ![Screenshot 2025-04-25 005205](https://github.com/user-attachments/assets/b51b0d7f-35fa-4f90-ac5e-84684583cb55)
 
+For this Output we have Usewd the DAX formula 
 
-(Most Frequent Pickup Point = 
- var pickpoint = TOPN(1,SUMMARIZE('Trip Details','Location Table'[Location],"pickpoint",COUNT('Trip Details'[Trip ID])),[pickpoint],DESC)
-     RETURN CONCATENATEX(pickpoint,'Location Table'[Location], " , "))
+            Most Frequent Pickup Point = 
+  
+         var pickpoint = 
+                           TOPN(1,SUMMARIZE('Trip Details','Location Table'[Location],"pickpoint",COUNT('Trip Details'[Trip ID])),[pickpoint],DESC)
+                     RETURN CONCATENATEX(pickpoint,'Location Table'[Location], " , ")
+
+	Most Frequent Drop-off Point
+
+•	Find the most common drop-off locations.
+•	Requires activating an inactive relationship in Power BI between Pickup Location and Drop-off 
+
+![Screenshot 2025-04-25 005633](https://github.com/user-attachments/assets/332e24d8-b400-4a73-9075-7b5c78715e3f)
+
+              Most Frequent Drop of = 
+
+                var dropoffcounts= 
+                ADDCOLUMNS(
+                    SUMMARIZE(
+                        'Trip Details',
+                        'Location Table'[Location]
+                    ),
+                    "dropoffcounts",
+                    CALCULATE(
+                        COUNT('Trip Details'[Trip ID]),
+                        USERELATIONSHIP('Trip Details'[DOLocationID],'Location Table'[LocationID])
+                    )
+                    )
+
+    var rankeddropoff=
+    ADDCOLUMNS(
+        dropoffcounts,
+        "rank",
+        RANKX(dropoffcounts,[dropoffcounts],,DESC,Dense)
+    )
+
+    var topdropoff =
+        FILTER(rankeddropoff, [rank]=1) 
+
+        RETURN
+        CONCATENATEX(topdropoff,'Location Table'[Location], " , ")
+
+# To be honest this is a advance Dax calculation but tried to undersatnd this practiced many time to get the output  
+
+Total Bookings by Location (Top 5)
+•	Identify the top 5 locations with the highest trip bookings.
+•	Helps in demand forecasting and optimizing driver availability in high-traffic areas.
+
+![Screenshot 2025-04-25 005900](https://github.com/user-attachments/assets/2d57347a-615e-4319-b2b5-6455749b931d)
+
+For this all we have used the  TOPn Function for the top five locations 
+Most Preferred Vehicle for Location Pickup
+•	Determine the most frequently booked vehicle type at each pickup location.
+•	Supports strategic vehicle distribution based on customer preferences and location demand.
+
+![Screenshot 2025-04-25 005918](https://github.com/user-attachments/assets/73fc50d7-7ebd-4c0b-8a72-4baae12d7315)
+
+For this all we have used the  TOPn Function for the top five Cars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
 
 
 
